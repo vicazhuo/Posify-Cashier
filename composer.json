@@ -10,7 +10,13 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "php": ">=5.3.2",
+        "ext-curl": "*",
+        "ext-openssl": "*",
+        "ext-dom": "*",
+        "ext-mcrypt": "*"
+    },
     "autoload": {
         "psr-4": {
             "AzureSaml\\": "src/"

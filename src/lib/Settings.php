@@ -7,7 +7,7 @@
  * @return
  */
 
-namespace wayenAzureSaml\lib;
+namespace AzureSaml\lib;
 
 
 class Settings

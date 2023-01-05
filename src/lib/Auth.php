@@ -7,7 +7,9 @@
  * @return
  */
 
-namespace wayenAzureSaml\lib;
+namespace AzureSaml\lib;
+
+use AzureSaml\extlib\XMLSecurityKey;
 
 /**
  * Class Auth
@@ -154,11 +156,11 @@ class Auth
      *
      * @param array|object|null $oldSettings Setting data (You can provide a OneLogin_Saml_Settings, the settings object of the Saml folder implementation)
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function __construct($oldSettings = null)
     {
-        $this->_settings = new OneLogin_Saml2_Settings($oldSettings);
+        $this->_settings = new Settings($oldSettings);
     }
 
     /**
@@ -176,14 +178,14 @@ class Auth
      *
      * @param bool $value Strict parameter
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function setStrict($value)
     {
         if (!is_bool($value)) {
-            throw new OneLogin_Saml2_Error(
+            throw new Error(
                 'Invalid value passed to setStrict()',
-                OneLogin_Saml2_Error::SETTINGS_INVALID_SYNTAX
+                Error::SETTINGS_INVALID_SYNTAX
             );
         }
 
@@ -195,7 +197,7 @@ class Auth
      *
      * @param string|null $requestId The ID of the AuthNRequest sent by this SP to the IdP
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      * @throws OneLogin_Saml2_ValidationError
      */
     public function processResponse($requestId = null)
@@ -204,7 +206,7 @@ class Auth
         $this->_errorReason = null;
         if (isset($_POST['SAMLResponse'])) {
             // AuthnResponse -- HTTP_POST Binding
-            $response = new OneLogin_Saml2_Response($this->_settings, $_POST['SAMLResponse']);
+            $response = new Response($this->_settings, $_POST['SAMLResponse']);
             $this->_lastResponse = $response->getXMLDocument();
 
             if ($response->isValid($requestId)) {
@@ -226,9 +228,9 @@ class Auth
             }
         } else {
             $this->_errors[] = 'invalid_binding';
-            throw new OneLogin_Saml2_Error(
+            throw new Error(
                 'SAML Response not found, Only supported HTTP_POST Binding',
-                OneLogin_Saml2_Error::SAML_RESPONSE_NOT_FOUND
+                Error::SAML_RESPONSE_NOT_FOUND
             );
         }
     }
@@ -244,19 +246,19 @@ class Auth
      *
      * @return string|null
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function processSLO($keepLocalSession = false, $requestId = null, $retrieveParametersFromServer = false, $cbDeleteSession = null, $stay = false)
     {
         $this->_errors = array();
         $this->_errorReason = null;
         if (isset($_GET['SAMLResponse'])) {
-            $logoutResponse = new OneLogin_Saml2_LogoutResponse($this->_settings, $_GET['SAMLResponse']);
+            $logoutResponse = new LogoutResponse($this->_settings, $_GET['SAMLResponse']);
             $this->_lastResponse = $logoutResponse->getXML();
             if (!$logoutResponse->isValid($requestId, $retrieveParametersFromServer)) {
                 $this->_errors[] = 'invalid_logout_response';
                 $this->_errorReason = $logoutResponse->getError();
-            } else if ($logoutResponse->getStatus() !== OneLogin_Saml2_Constants::STATUS_SUCCESS) {
+            } else if ($logoutResponse->getStatus() !== Constants::STATUS_SUCCESS) {
                 $this->_errors[] = 'logout_not_success';
             } else {
                 $this->_lastMessageId = $logoutResponse->id;
@@ -269,7 +271,7 @@ class Auth
                 }
             }
         } else if (isset($_GET['SAMLRequest'])) {
-            $logoutRequest = new OneLogin_Saml2_LogoutRequest($this->_settings, $_GET['SAMLRequest']);
+            $logoutRequest = new LogoutRequest($this->_settings, $_GET['SAMLRequest']);
             $this->_lastRequest = $logoutRequest->getXML();
             if (!$logoutRequest->isValid($retrieveParametersFromServer)) {
                 $this->_errors[] = 'invalid_logout_request';
@@ -284,7 +286,7 @@ class Auth
                 }
                 $inResponseTo = $logoutRequest->id;
                 $this->_lastMessageId = $logoutRequest->id;
-                $responseBuilder = new OneLogin_Saml2_LogoutResponse($this->_settings);
+                $responseBuilder = new LogoutResponse($this->_settings);
                 $responseBuilder->build($inResponseTo);
                 $this->_lastResponse = $responseBuilder->getXML();
 
@@ -306,9 +308,9 @@ class Auth
             }
         } else {
             $this->_errors[] = 'invalid_binding';
-            throw new OneLogin_Saml2_Error(
+            throw new Error(
                 'SAML LogoutRequest/LogoutResponse not found. Only supported HTTP_REDIRECT Binding',
-                OneLogin_Saml2_Error::SAML_LOGOUTMESSAGE_NOT_FOUND
+                Error::SAML_LOGOUTMESSAGE_NOT_FOUND
             );
         }
     }
@@ -323,7 +325,7 @@ class Auth
      *
      * @return string|null
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function redirectTo($url = '', $parameters = array(), $stay = false)
     {
@@ -496,7 +498,7 @@ class Auth
      *
      * @return string|null If $stay is True, it return a string with the SLO URL + LogoutRequest + parameters
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function login($returnTo = null, $parameters = array(), $forceAuthn = false, $isPassive = false, $stay = false, $setNameIdPolicy = true, $nameIdValueReq = null)
     {
@@ -538,7 +540,7 @@ class Auth
      *
      * @return string|null If $stay is True, it return a string with the SLO URL + LogoutRequest + parameters
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function logout($returnTo = null, $parameters = array(), $nameId = null, $sessionIndex = null, $stay = false, $nameIdFormat = null, $nameIdNameQualifier = null, $nameIdSPNameQualifier = null)
     {
@@ -546,9 +548,9 @@ class Auth
 
         $sloUrl = $this->getSLOurl();
         if (empty($sloUrl)) {
-            throw new OneLogin_Saml2_Error(
+            throw new Error(
                 'The IdP does not support Single Log Out',
-                OneLogin_Saml2_Error::SAML_SINGLE_LOGOUT_NOT_SUPPORTED
+                Error::SAML_SINGLE_LOGOUT_NOT_SUPPORTED
             );
         }
 
@@ -559,7 +561,7 @@ class Auth
             $nameIdFormat = $this->_nameidFormat;
         }
 
-        $logoutRequest = new OneLogin_Saml2_LogoutRequest($this->_settings, null, $nameId, $sessionIndex, $nameIdFormat, $nameIdNameQualifier, $nameIdSPNameQualifier);
+        $logoutRequest = new LogoutRequest($this->_settings, null, $nameId, $sessionIndex, $nameIdFormat, $nameIdNameQualifier, $nameIdSPNameQualifier);
 
         $this->_lastRequest = $logoutRequest->getXML();
         $this->_lastRequestID = $logoutRequest->id;
@@ -642,7 +644,7 @@ class Auth
      *
      * @return string A base64 encoded signature
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function buildRequestSignature($samlRequest, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA1)
     {
@@ -658,7 +660,7 @@ class Auth
      *
      * @return string A base64 encoded signature
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     public function buildResponseSignature($samlResponse, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA1)
     {
@@ -675,7 +677,7 @@ class Auth
      *
      * @return string A base64 encoded signature
      *
-     * @throws OneLogin_Saml2_Error
+     * @throws Error
      */
     private function buildMessageSignature($samlMessage, $relayState, $signAlgorithm = XMLSecurityKey::RSA_SHA256, $type = "SAMLRequest")
     {
@@ -687,7 +689,7 @@ class Auth
                 $errorMsg = "Trying to sign the SAML Response but can't load the SP private key";
             }
 
-            throw new OneLogin_Saml2_Error($errorMsg, OneLogin_Saml2_Error::PRIVATE_KEY_NOT_FOUND);
+            throw new Error($errorMsg, Error::PRIVATE_KEY_NOT_FOUND);
         }
 
         $objKey = new XMLSecurityKey($signAlgorithm, array('type' => 'private'));
