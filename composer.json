@@ -31,10 +31,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.2-dev"
-        },
-        "hyperf": {
-            "config": "Hyperf\\Process\\ConfigProvider"
+            "dev-master": "1.0"
         }
     }
 }
