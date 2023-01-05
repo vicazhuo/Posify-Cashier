@@ -42,7 +42,7 @@ class Constants
     const NS_XENC = 'http://www.w3.org/2001/04/xmlenc#';
     const NS_DS = 'http://www.w3.org/2000/09/xmldsig#';
 
-    // Bindings
+    // Bindingsadadas
     const BINDING_HTTP_POST = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST';
     const BINDING_HTTP_REDIRECT = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect';
     const BINDING_HTTP_ARTIFACT = 'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact';
