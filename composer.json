@@ -1,0 +1,19 @@
+{
+    "name": "wayen/azuread",
+    "description": "This is base on Azure auth for saml 2.0",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "wayen zhuo",
+            "email": "wayenzhuo@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "AzureSaml\\": "src/"
+        }
+    }
+}
