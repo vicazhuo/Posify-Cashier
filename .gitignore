@@ -1,24 +1,18 @@
-ConfigSecret.py
-venv
-app/venv
-app/node_modules
-.env
-.env.sh
+.DS_Store
 node_modules
+/dist
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.history
+# Editor directories and files
 .idea
-$CACHE_FILE$
-data-*
-app/nohup.out
-nohup.out
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw*
+.env
 
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
-*bk.py
-*bk
-**/__pycache__
-*.pem
-*.sqlite3
-/scripts
-/ignore
-*.logs
