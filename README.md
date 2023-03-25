@@ -1,4 +1,4 @@
-# Posify Casher
+# Posify Cashier
 
 ## 开发规范
 统一使用ES6 语法
