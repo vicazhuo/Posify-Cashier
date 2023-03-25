@@ -1,4 +1,5 @@
-# CRMEB Cashier
+# Posify Casher
+
 ## 开发规范
 统一使用ES6 语法
 方法注释
