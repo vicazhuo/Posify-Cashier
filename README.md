@@ -17,6 +17,7 @@ export default function toExcel ({ th, data, fileName, fileType, sheetName })
 
 页面目录 文件夹命名格式骆驼式命名法,例如：用户列表 userList 
 例如：商品模块
+~~~
 product 商品
     ├─ product 商品管理
         ├─productList 商品管理目录
@@ -28,7 +29,7 @@ product 商品
             ├─ delete.vue
     ├─productCategory 商品分类目录
         ├─ index.vue 商品分类首页
-
+~~~
 页面命名、组建、文件夹 命名格式小驼峰命名法,例如：用户列表 userList
 
 类名函数命名 大驼峰式 例如：addUser
