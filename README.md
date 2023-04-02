@@ -15,7 +15,7 @@ export default function toExcel ({ th, data, fileName, fileType, sheetName })
 
 ### 命名
 
-页面目录 文件夹命名格式骆驼式命名法,例如：用户列表 userList 
+页面目录 文件夹命名格式骆驼式命名法,例如：用户列表 -> userList 
 例如：商品模块
 ~~~
 product 商品
